@@ -54,9 +54,9 @@ initializeDatabase().then(() => {
 const path = require('path');
 
 // Serve Angular static files
-app.use(express.static(path.join(__dirname, '../frontend/dist/inventory-order-app')));
+app.use(express.static(path.join(__dirname, '../frontend/dist/inventory-order-app/browser')));
 
 // Fallback for all other routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/inventory-order-app/index.html'));
+  res.sendFile(path.join(__dirname, '../frontend/dist/inventory-order-app/browser/index.html'));
 });
