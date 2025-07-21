@@ -1,0 +1,19 @@
+<div class="container">
+  <h2>Order Details</h2>
+
+  <div *ngIf="order">
+    <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+    <p><strong>Order Number:</strong> {{ order.order_number }}</p>
+    <p><strong>Order Status:</strong> {{ order.order_status }}</p>
+    <p><strong>Created At:</strong> {{ order.created_at | date:'medium' }}</p>
+    <p><strong>Customer Name:</strong> {{ order.user_name }}</p>
+    <p><strong>Customer Email:</strong> {{ order.user_email }}</p>
+    <p><strong>Product Name:</strong> {{ order.product_name }}</p>
+    <p><strong>Product SKU:</strong> {{ order.product_sku }}</p>
+    <p><strong>Product Price:</strong> {{ order.product_price | currency:'USD' }}</p>
+  </div>
+
+  <div *ngIf="!order">
+    <p>Loading order details...</p>
+  </div>
+</div>

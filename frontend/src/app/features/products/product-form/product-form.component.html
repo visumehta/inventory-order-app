@@ -1,0 +1,54 @@
+<div class="container">
+  <h2>{{ isEditMode ? 'Edit Product' : 'Add New Product' }}</h2>
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="sku" class="form-label">SKU</label>
+      <input type="text" id="sku" formControlName="master_sku" class="form-control" [ngClass]="{ 'is-invalid': productForm.get('master_sku')?.invalid && productForm.get('master_sku')?.touched }" />
+      <div *ngIf="productForm.get('master_sku')?.invalid && productForm.get('master_sku')?.touched" class="invalid-feedback">
+        <div *ngIf="productForm.get('master_sku')?.errors?.['required']">SKU is required.</div>
+        <div *ngIf="productForm.get('master_sku')?.errors?.['skuTaken']">This SKU is already taken.</div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" id="name" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': productForm.get('name')?.invalid && productForm.get('name')?.touched }" />
+      <div *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="invalid-feedback">
+        <div *ngIf="productForm.get('name')?.errors?.['required']">Name is required.</div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea id="description" formControlName="description" class="form-control"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="price" class="form-label">Price</label>
+      <input type="number" id="price" formControlName="price" class="form-control" [ngClass]="{ 'is-invalid': productForm.get('price')?.invalid && productForm.get('price')?.touched }" />
+      <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="invalid-feedback">
+        <div *ngIf="productForm.get('price')?.errors?.['required']">Price is required.</div>
+        <div *ngIf="productForm.get('price')?.errors?.['min']">Price must be a positive number.</div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="quantity" class="form-label">Stock Quantity</label>
+      <input type="number" id="quantity" formControlName="quantity" class="form-control" [ngClass]="{ 'is-invalid': productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched }" />
+      <div *ngIf="productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched" class="invalid-feedback">
+        <div *ngIf="productForm.get('quantity')?.errors?.['required']">Stock Quantity is required.</div>
+        <div *ngIf="productForm.get('quantity')?.errors?.['min']">Stock Quantity must be a positive number.</div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="image_url" class="form-label">Upload Image</label>
+      <input type="file" id="image_url" class="form-control" (change)="onFileSelected($event)" />
+      <div *ngIf="product?.image_url && !selectedFile" class="mt-2">
+        <img [src]="getFullImageUrl(product?.image_url)" alt="Current Product Image" style="max-width: 100px; max-height: 100px; object-fit: cover;">
+        <small class="d-block text-muted">Current Image</small>
+      </div>
+    </div>
+    <div class="mb-3 form-check">
+      <input type="checkbox" id="is_banned" formControlName="is_banned" class="form-check-input" />
+      <label for="is_banned" class="form-check-label">Is Banned</label>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">{{ isEditMode ? 'Update Product' : 'Add Product' }}</button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="router.navigate(['/products'])">Cancel</button>
+  </form>
+</div>

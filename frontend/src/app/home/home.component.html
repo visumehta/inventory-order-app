@@ -1,0 +1,24 @@
+<div class="home-container">
+  <div class="welcome-banner">
+    <h2>Welcome, {{ userName }}!</h2>
+    <p>Your current role is: <strong>{{ userRole }}</strong></p>
+  </div>
+
+  <div class="dashboard-cards">
+    <div class="card" routerLink="/products">
+      <h3>Manage Products</h3>
+      <p>View, add, and edit products in the inventory.</p>
+    </div>
+
+    <div class="card" routerLink="/orders">
+      <h3>View Orders</h3>
+      <p>Track and manage customer orders.</p>
+    </div>
+
+    <div class="card" routerLink="/products/add" *ngIf="userRole === 'admin'">
+        <h3>Add New Product</h3>
+        <p>Quickly add a new product to the inventory.</p>
+    </div>
+  </div>
+</div>
+

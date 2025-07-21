@@ -1,0 +1,65 @@
+<div class="container">
+  <h2>Product List</h2>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <input type="text" class="form-control" placeholder="Filter products..." [(ngModel)]="filterText" (input)="onFilter()">
+    </div>
+    <div class="col-md-6 text-end">
+      <button class="btn btn-secondary me-2" [routerLink]="['/home']">Back to Home</button>
+      <button class="btn btn-primary" [routerLink]="['/products/add']" *appRoleAccess="['admin']">Add New Product</button>
+    </div>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th (click)="onSort('master_sku')">SKU <i *ngIf="sortBy === 'master_sku'" class="fa" [ngClass]="{'fa-sort-asc': sortOrder === 'asc', 'fa-sort-desc': sortOrder === 'desc'}"></i></th>
+        <th (click)="onSort('name')">Name <i *ngIf="sortBy === 'name'" class="fa" [ngClass]="{'fa-sort-asc': sortOrder === 'asc', 'fa-sort-desc': sortOrder === 'desc'}"></i></th>
+        <th>Image</th>
+        <th (click)="onSort('price')">Price <i *ngIf="sortBy === 'price'" class="fa" [ngClass]="{'fa-sort-asc': sortOrder === 'asc', 'fa-sort-desc': sortOrder === 'desc'}"></i></th>
+        <th (click)="onSort('quantity')">Quantity <i *ngIf="sortBy === 'quantity'" class="fa" [ngClass]="{'fa-sort-asc': sortOrder === 'asc', 'fa-sort-desc': sortOrder === 'desc'}"></i></th>
+        <th>Status</th>
+        <th>Is Banned</th>
+        <th *appRoleAccess="['admin']">Actions</th>
+        <th *appRoleAccess="['user']">Order</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{ product.master_sku }}</td>
+        <td>{{ product.name }}</td>
+        <td><img [src]="getFullImageUrl(product.image_url)" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover;"></td>
+        <td>{{ product.price | currency }}</td>
+        <td>{{ product.quantity }}</td>
+        <td [style.color]="getProductStatus(product.quantity) | statusColor">{{ getProductStatus(product.quantity) }}</td>
+        <td>{{ product.is_banned ? 'Yes' : 'No' }}</td>
+        <td *appRoleAccess="['admin']">
+          <button class="btn btn-sm btn-info me-2" (click)="openEditModal(product)" [disabled]="product.is_banned">Edit</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.id!)" [disabled]="product.is_banned">Delete</button>
+        </td>
+        <td>
+          <button *ngIf="!isAdmin" class="btn btn-sm btn-primary" (click)="placeOrder(product)">Place Order</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <nav *ngIf="totalItems > itemsPerPage">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="onPageChange(currentPage - 1)">Previous</a>
+      </li>
+      <li class="page-item" *ngFor="let page of [].constructor(Math.ceil(totalItems / itemsPerPage)); let i = index" [class.active]="currentPage === i + 1">
+        <a class="page-link" (click)="onPageChange(i + 1)">{{ i + 1 }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === Math.ceil(totalItems / itemsPerPage)">
+        <a class="page-link" (click)="onPageChange(currentPage + 1)">Next</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<app-modal [show]="showProductModal" [title]="selectedProduct ? 'Edit Product' : 'Add Product'" (close)="closeProductModal()">
+  <app-product-form [product]="selectedProduct" (formSubmitted)="onProductFormSubmit()"></app-product-form>
+</app-modal>
